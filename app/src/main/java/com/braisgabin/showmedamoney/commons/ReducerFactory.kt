@@ -1,19 +1,24 @@
 package com.braisgabin.showmedamoney.commons
 
+import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LiveDataReactiveStreams
 import io.reactivex.Flowable
 import io.reactivex.disposables.Disposable
+import javax.inject.Inject
 
 @Mockable
-class ReducerFactory {
+class ReducerFactory @Inject constructor(private val lifecycle: Lifecycle) {
 
   fun <T> create(initialState: T, partialStates: Flowable<(T) -> T>, action: (T) -> Unit): Disposable {
-    return partialStates
+    val states = partialStates
         .scan(initialState) { currentState, partialState ->
           partialState(currentState)
         }
-        .subscribe(
-            { action(it) },
-            { throw RuntimeException(it) },
-            { throw IllegalStateException("The show should go on!") })
+        .replay(1)
+
+    LiveDataReactiveStreams.fromPublisher(states)
+        .observe({ lifecycle }, { action(it!!) })
+
+    return states.connect()
   }
 }
