@@ -84,4 +84,8 @@ class ContactsFragment : Fragment(), ContactsView {
       }
     }.exhaustive
   }
+
+  companion object {
+    fun create(): ContactsFragment = ContactsFragment()
+  }
 }
