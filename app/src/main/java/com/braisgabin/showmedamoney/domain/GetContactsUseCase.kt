@@ -4,10 +4,11 @@ import arrow.core.Either
 import com.braisgabin.showmedamoney.commons.Mockable
 import com.braisgabin.showmedamoney.entities.Contact
 import io.reactivex.Single
+import javax.inject.Inject
 
 @Mockable
-class GetContactsUseCase {
+class GetContactsUseCase @Inject constructor() {
   fun retrieveContacts(): Single<Either<Throwable, List<Contact>>> {
-    TODO("Working on it")
+    return Single.just(Either.right(emptyList()))
   }
 }

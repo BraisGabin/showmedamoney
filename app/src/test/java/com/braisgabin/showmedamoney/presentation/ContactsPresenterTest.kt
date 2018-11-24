@@ -28,6 +28,14 @@ class ContactsPresenterTest {
   private val contacts: Subject<Either<Throwable, List<Contact>>> = PublishSubject.create()
   private val events: Subject<ContactsEvent> = PublishSubject.create()
   private val render: (ContactsState) -> Unit = mock()
+  private val view: ContactsView = object : ContactsView {
+    override fun render(state: ContactsState) {
+      this@ContactsPresenterTest.render(state)
+    }
+
+    override val events = this@ContactsPresenterTest.events
+
+  }
   private val reducerFactory: ReducerFactory = mock {
     on { create<Any>(any(), any(), any()) } doReturn mock<Disposable>()
   }
@@ -37,8 +45,7 @@ class ContactsPresenterTest {
   private val navigator: Navigator = mock()
 
   private val subject = ContactsPresenter(
-      events,
-      render,
+      view,
       reducerFactory,
       getContactsUseCase,
       navigator

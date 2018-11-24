@@ -8,15 +8,17 @@ import com.braisgabin.showmedamoney.domain.GetContactsUseCase
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Observable
+import javax.inject.Inject
 
 @Mockable
-class ContactsPresenter(
-    private val events: Observable<ContactsEvent>,
-    private val render: (ContactsState) -> Unit,
+class ContactsPresenter @Inject constructor(
+    view: ContactsView,
     private val reducerFactory: ReducerFactory,
     private val getContactsUseCase: GetContactsUseCase,
     private val navigator: Navigator
 ) : RxViewModel() {
+  private val events: Observable<ContactsEvent> = view.events
+  private val render: (ContactsState) -> Unit = view::render
   private val onlyOnce = OnlyOnce()
 
   fun start() {

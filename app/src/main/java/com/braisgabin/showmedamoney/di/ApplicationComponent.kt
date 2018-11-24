@@ -1,10 +1,11 @@
 package com.braisgabin.showmedamoney.di
 
 import com.braisgabin.showmedamoney.App
+import com.braisgabin.showmedamoney.presentation.ContactsComponent
 import dagger.BindsInstance
 import dagger.Component
 
-@Component
+@Component(modules = [ApplicationModule::class])
 interface ApplicationComponent {
 
   @Component.Builder
@@ -14,4 +15,6 @@ interface ApplicationComponent {
 
     fun build(): ApplicationComponent
   }
+
+  fun contactsBuilder(): ContactsComponent.Builder
 }

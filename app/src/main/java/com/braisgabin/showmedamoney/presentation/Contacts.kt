@@ -1,6 +1,13 @@
 package com.braisgabin.showmedamoney.presentation
 
 import com.braisgabin.showmedamoney.entities.Contact
+import io.reactivex.Observable
+
+interface ContactsView {
+  fun render(state: ContactsState)
+
+  val events: Observable<ContactsEvent>
+}
 
 sealed class ContactsState {
   object Progress : ContactsState()
