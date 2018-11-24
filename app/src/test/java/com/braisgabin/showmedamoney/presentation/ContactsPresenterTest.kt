@@ -58,7 +58,7 @@ class ContactsPresenterTest {
     subject.start()
 
     val argumentCaptor = argumentCaptor<Flowable<(ContactsState) -> ContactsState>>()
-    verify(reducerFactory).create(eq(ContactsState.Progress), argumentCaptor.capture(), eq(render))
+    verify(reducerFactory).create(eq(ContactsState.Progress), argumentCaptor.capture(), eq(view::render))
     verify(getContactsUseCase).retrieveContacts()
 
     testSubscriber = argumentCaptor.firstValue.test()

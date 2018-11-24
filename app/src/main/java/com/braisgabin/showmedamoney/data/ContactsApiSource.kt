@@ -1,4 +1,4 @@
-package com.braisgabin.showmedamoney.domain
+package com.braisgabin.showmedamoney.data
 
 import arrow.core.Either
 import com.braisgabin.showmedamoney.commons.Mockable
@@ -7,10 +7,8 @@ import io.reactivex.Single
 import javax.inject.Inject
 
 @Mockable
-class GetContactsUseCase @Inject constructor(
-  private val repository: ContactsRepository
-) {
+class ContactsApiSource @Inject constructor() {
   fun retrieveContacts(): Single<Either<Throwable, List<Contact>>> {
-    return repository.retrieveContacts()
+    TODO()
   }
 }
