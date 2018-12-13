@@ -56,6 +56,7 @@ internal class ContactsAdapter(
           .fit()
           .centerCrop()
           .into(imageView)
+      itemView.isActivated = item.selected
     }
 
     companion object {
