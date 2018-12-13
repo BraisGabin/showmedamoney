@@ -1,7 +1,11 @@
 package com.braisgabin.showmedamoney.presentation.contacts
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -62,6 +66,13 @@ class ContactsFragment : Fragment(), ContactsView {
 
     fab.setOnClickListener {
       events.accept(ContactsEvent.NextStepClick)
+    }
+  }
+
+  override fun onResume() {
+    super.onResume()
+    if (ContextCompat.checkSelfPermission(context!!, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+      ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.READ_CONTACTS), 0)
     }
   }
 
