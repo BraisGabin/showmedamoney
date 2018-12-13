@@ -4,8 +4,10 @@ import com.braisgabin.showmedamoney.App
 import com.braisgabin.showmedamoney.presentation.ContactsComponent
 import dagger.BindsInstance
 import dagger.Component
+import javax.inject.Singleton
 
-@Component(modules = [ApplicationModule::class])
+@Singleton
+@Component(modules = [ApplicationModule::class, DataModule::class])
 interface ApplicationComponent {
 
   @Component.Builder
