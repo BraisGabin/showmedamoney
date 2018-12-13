@@ -2,7 +2,7 @@ package com.braisgabin.showmedamoney
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.braisgabin.showmedamoney.presentation.ContactsFragment
+import com.braisgabin.showmedamoney.presentation.contacts.ContactsFragment
 
 class MainActivity : AppCompatActivity() {
 

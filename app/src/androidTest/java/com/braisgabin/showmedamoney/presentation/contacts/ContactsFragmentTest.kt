@@ -1,4 +1,4 @@
-package com.braisgabin.showmedamoney.presentation
+package com.braisgabin.showmedamoney.presentation.contacts
 
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.click

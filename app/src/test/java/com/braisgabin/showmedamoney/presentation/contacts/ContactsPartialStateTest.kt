@@ -1,4 +1,4 @@
-package com.braisgabin.showmedamoney.presentation
+package com.braisgabin.showmedamoney.presentation.contacts
 
 import arrow.core.Either
 import com.braisgabin.showmedamoney.contact

@@ -1,4 +1,4 @@
-package com.braisgabin.showmedamoney.presentation
+package com.braisgabin.showmedamoney.presentation.contacts
 
 import com.braisgabin.showmedamoney.entities.Contact
 import io.reactivex.Observable

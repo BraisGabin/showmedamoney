@@ -1,7 +1,7 @@
 package com.braisgabin.showmedamoney.di
 
 import com.braisgabin.showmedamoney.App
-import com.braisgabin.showmedamoney.presentation.ContactsComponent
+import com.braisgabin.showmedamoney.presentation.contacts.ContactsComponent
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton

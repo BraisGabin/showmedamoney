@@ -1,4 +1,4 @@
-package com.braisgabin.showmedamoney.presentation
+package com.braisgabin.showmedamoney.presentation.contacts
 
 import android.support.v7.recyclerview.extensions.ListAdapter
 import android.support.v7.util.DiffUtil

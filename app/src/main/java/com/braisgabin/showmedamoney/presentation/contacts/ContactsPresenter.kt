@@ -1,10 +1,11 @@
-package com.braisgabin.showmedamoney.presentation
+package com.braisgabin.showmedamoney.presentation.contacts
 
 import com.braisgabin.showmedamoney.commons.Mockable
 import com.braisgabin.showmedamoney.commons.OnlyOnce
 import com.braisgabin.showmedamoney.commons.ReducerFactory
 import com.braisgabin.showmedamoney.commons.RxViewModel
 import com.braisgabin.showmedamoney.domain.GetContactsUseCase
+import com.braisgabin.showmedamoney.presentation.Navigator
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Observable
@@ -21,13 +22,18 @@ class ContactsPresenter @Inject constructor(
   private val render: (ContactsState) -> Unit = view::render
   private val onlyOnce = OnlyOnce()
 
+  private var lastState: ContactsState? = null
+
   fun start() {
     onlyOnce.checkOnlyOnce()
 
     disposable.add(reducerFactory.create(
         ContactsState.Progress,
-        Flowable.merge(partialStates()),
-        render))
+        Flowable.merge(partialStates())
+    ) { state ->
+      render(state)
+      lastState = state
+    })
   }
 
   private fun partialStates(): List<Flowable<out (ContactsState) -> ContactsState>> {
@@ -44,7 +50,14 @@ class ContactsPresenter @Inject constructor(
             .map { (clickedContact) -> ClickContactPartialState(clickedContact) },
         events.ofType(ContactsEvent.NextStepClick::class.java)
             .toFlowable(BackpressureStrategy.LATEST)
-            .doOnNext { navigator.step2() }
+            .doOnNext { _ ->
+              val selectedContacts = (lastState as? ContactsState.Data)?.let { state ->
+                state.contacts
+                    .filter { it.selected }
+                    .map { it.contact }
+              } ?: emptyList()
+              navigator.step2(selectedContacts)
+            }
             .map { Identity<ContactsState>() }
     )
   }

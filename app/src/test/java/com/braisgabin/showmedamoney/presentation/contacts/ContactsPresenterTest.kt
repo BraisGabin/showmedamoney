@@ -1,10 +1,11 @@
-package com.braisgabin.showmedamoney.presentation
+package com.braisgabin.showmedamoney.presentation.contacts
 
 import arrow.core.Either
 import com.braisgabin.showmedamoney.commons.ReducerFactory
 import com.braisgabin.showmedamoney.contact
 import com.braisgabin.showmedamoney.domain.GetContactsUseCase
 import com.braisgabin.showmedamoney.entities.Contact
+import com.braisgabin.showmedamoney.presentation.Navigator
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
@@ -58,7 +59,7 @@ class ContactsPresenterTest {
     subject.start()
 
     val argumentCaptor = argumentCaptor<Flowable<(ContactsState) -> ContactsState>>()
-    verify(reducerFactory).create(eq(ContactsState.Progress), argumentCaptor.capture(), eq(view::render))
+    verify(reducerFactory).create(eq(ContactsState.Progress), argumentCaptor.capture(), any())
     verify(getContactsUseCase).retrieveContacts()
 
     testSubscriber = argumentCaptor.firstValue.test()
@@ -107,7 +108,7 @@ class ContactsPresenterTest {
 
     testSubscriber
         .assertValue(Identity())
-    verify(navigator).step2()
+    verify(navigator).step2(emptyList())
   }
 
   @Test
