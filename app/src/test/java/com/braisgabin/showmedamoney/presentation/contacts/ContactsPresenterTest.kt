@@ -15,30 +15,21 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import io.reactivex.Flowable
-import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import io.reactivex.subscribers.TestSubscriber
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
-import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
 class ContactsPresenterTest {
 
   private val contacts: Subject<Either<Throwable, List<Contact>>> = PublishSubject.create()
-  private val events: Subject<ContactsEvent> = PublishSubject.create()
   private val render: (ContactsState) -> Unit = mock()
-  private val view: ContactsView = object : ContactsView {
-    override fun render(state: ContactsState) {
-      this@ContactsPresenterTest.render(state)
-    }
-
-    override val events = this@ContactsPresenterTest.events
-
-  }
   private val reducerFactory: ReducerFactory = mock {
-    on { create<Any>(any(), any(), any()) } doReturn mock<Disposable>()
+    on { create<Any>(any(), any()) } doReturn Flowable.never()
   }
   private val getContactsUseCase: GetContactsUseCase = mock {
     on { retrieveContacts() } doReturn contacts.take(1).singleOrError()
@@ -46,7 +37,6 @@ class ContactsPresenterTest {
   private val navigator: Navigator = mock()
 
   private val subject = ContactsPresenter(
-      view,
       reducerFactory,
       getContactsUseCase,
       navigator
@@ -56,10 +46,10 @@ class ContactsPresenterTest {
 
   @Before
   fun setUp() {
-    subject.start()
+    subject.states
 
     val argumentCaptor = argumentCaptor<Flowable<(ContactsState) -> ContactsState>>()
-    verify(reducerFactory).create(eq(ContactsState.Progress), argumentCaptor.capture(), any())
+    verify(reducerFactory).create(eq(ContactsState.Progress), argumentCaptor.capture())
     verify(getContactsUseCase).retrieveContacts()
 
     testSubscriber = argumentCaptor.firstValue.test()
@@ -84,7 +74,7 @@ class ContactsPresenterTest {
     val data = Either.right(emptyList<Contact>())
     contacts.onNext(data)
 
-    events.onNext(ContactsEvent.Retry)
+    subject.events.accept(ContactsEvent.Retry)
     verify(getContactsUseCase, times(2)).retrieveContacts()
 
     val data2 = Either.left(Exception())
@@ -96,7 +86,7 @@ class ContactsPresenterTest {
 
   @Test
   fun `correct call to reducerFactory3`() {
-    events.onNext(ContactsEvent.ClickContact(SelectedContact(contact("1"), false)))
+    subject.events.accept(ContactsEvent.ClickContact(SelectedContact(contact("1"), false)))
 
     testSubscriber
         .assertValue(ClickContactPartialState(SelectedContact(contact("1"), false)))
@@ -104,7 +94,7 @@ class ContactsPresenterTest {
 
   @Test
   fun `correct call to reducerFactory4`() {
-    events.onNext(ContactsEvent.NextStepClick)
+    subject.events.accept(ContactsEvent.NextStepClick)
 
     testSubscriber
         .assertValue(Identity())
@@ -112,12 +102,7 @@ class ContactsPresenterTest {
   }
 
   @Test
-  fun `only one call to start`() {
-    try {
-      subject.start()
-      Assert.fail()
-    } catch (_: IllegalStateException) {
-      // correct path
-    }
+  fun `the presenter always returns the same flowable`() {
+    assertThat(subject.states, `is`(subject.states))
   }
 }

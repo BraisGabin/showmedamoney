@@ -1,6 +1,8 @@
 package com.braisgabin.showmedamoney.presentation.contacts
 
 import android.Manifest
+import android.arch.lifecycle.LiveDataReactiveStreams
+import android.arch.lifecycle.Observer
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
@@ -15,19 +17,15 @@ import com.braisgabin.showmedamoney.R
 import com.braisgabin.showmedamoney.commons.extensions.allGoneExcept
 import com.braisgabin.showmedamoney.commons.extensions.exhaustive
 import com.braisgabin.showmedamoney.component
-import com.jakewharton.rxrelay2.PublishRelay
-import com.jakewharton.rxrelay2.Relay
 import kotterknife.bindView
 import kotterknife.bindViews
 import javax.inject.Inject
 
-class ContactsFragment : Fragment(), ContactsView {
-
-  override val events: Relay<ContactsEvent> = PublishRelay.create()
+class ContactsFragment : Fragment() {
 
   private val adapterListener = object : ContactsAdapter.Listener {
     override fun onClick(contact: SelectedContact) {
-      events.accept(ContactsEvent.ClickContact(contact))
+      presenter.events.accept(ContactsEvent.ClickContact(contact))
     }
   }
 
@@ -38,13 +36,10 @@ class ContactsFragment : Fragment(), ContactsView {
     super.onCreate(savedInstanceState)
 
     activity!!.application.component
-        .contactsBuilder()
-        .withView(this)
-        .withLifecycle(lifecycle)
-        .build()
         .inject(this)
 
-    presenter.start()
+    LiveDataReactiveStreams.fromPublisher(presenter.states)
+        .observe(this, Observer<ContactsState> { state -> render(state!!) })
   }
 
   private val progressView: View by bindView(R.id.progressView)
@@ -61,11 +56,11 @@ class ContactsFragment : Fragment(), ContactsView {
     recyclerView.layoutManager = LinearLayoutManager(context)
 
     retryView.setOnClickListener {
-      events.accept(ContactsEvent.Retry)
+      presenter.events.accept(ContactsEvent.Retry)
     }
 
     fab.setOnClickListener {
-      events.accept(ContactsEvent.NextStepClick)
+      presenter.events.accept(ContactsEvent.NextStepClick)
     }
   }
 
@@ -76,7 +71,7 @@ class ContactsFragment : Fragment(), ContactsView {
     }
   }
 
-  override fun render(state: ContactsState) {
+  private fun render(state: ContactsState) {
     when (state) {
       ContactsState.Progress -> views.allGoneExcept(progressView)
       ContactsState.Retry -> views.allGoneExcept(retryView)

@@ -1,7 +1,7 @@
 package com.braisgabin.showmedamoney.di
 
 import com.braisgabin.showmedamoney.App
-import com.braisgabin.showmedamoney.presentation.contacts.ContactsComponent
+import com.braisgabin.showmedamoney.presentation.contacts.ContactsFragment
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -18,5 +18,5 @@ interface ApplicationComponent {
     fun build(): ApplicationComponent
   }
 
-  fun contactsBuilder(): ContactsComponent.Builder
+  fun inject(fragment: ContactsFragment)
 }

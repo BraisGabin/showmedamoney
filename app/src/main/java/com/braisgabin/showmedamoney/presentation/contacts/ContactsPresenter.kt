@@ -1,40 +1,33 @@
 package com.braisgabin.showmedamoney.presentation.contacts
 
 import com.braisgabin.showmedamoney.commons.Mockable
-import com.braisgabin.showmedamoney.commons.OnlyOnce
 import com.braisgabin.showmedamoney.commons.ReducerFactory
 import com.braisgabin.showmedamoney.commons.RxViewModel
 import com.braisgabin.showmedamoney.domain.GetContactsUseCase
 import com.braisgabin.showmedamoney.presentation.Navigator
+import com.jakewharton.rxrelay2.PublishRelay
+import com.jakewharton.rxrelay2.Relay
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
-import io.reactivex.Observable
 import javax.inject.Inject
 
 @Mockable
 class ContactsPresenter @Inject constructor(
-    view: ContactsView,
     private val reducerFactory: ReducerFactory,
     private val getContactsUseCase: GetContactsUseCase,
     private val navigator: Navigator
 ) : RxViewModel() {
-  private val events: Observable<ContactsEvent> = view.events
-  private val render: (ContactsState) -> Unit = view::render
-  private val onlyOnce = OnlyOnce()
+  val events: Relay<ContactsEvent> = PublishRelay.create()
+  val states: Flowable<ContactsState> by lazy {
+    reducerFactory.create(
+        ContactsState.Progress,
+        Flowable.merge(partialStates()))
+        .doOnNext { lastState = it }
+        .replay(1)
+        .autoConnect(0) { disposable.add(it) }
+  }
 
   private var lastState: ContactsState? = null
-
-  fun start() {
-    onlyOnce.checkOnlyOnce()
-
-    disposable.add(reducerFactory.create(
-        ContactsState.Progress,
-        Flowable.merge(partialStates())
-    ) { state ->
-      render(state)
-      lastState = state
-    })
-  }
 
   private fun partialStates(): List<Flowable<out (ContactsState) -> ContactsState>> {
     return listOf(
