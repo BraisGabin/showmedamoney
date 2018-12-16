@@ -1,9 +1,8 @@
 package com.braisgabin.showmedamoney
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import com.braisgabin.showmedamoney.di.DaggerActivity
-import com.braisgabin.showmedamoney.entities.Contact
-import com.braisgabin.showmedamoney.presentation.amount.AmountFragment
 import com.braisgabin.showmedamoney.presentation.contacts.ContactsFragment
 
 class MainActivity : DaggerActivity() {
@@ -18,9 +17,9 @@ class MainActivity : DaggerActivity() {
     }
   }
 
-  fun moveToAmount(contacts: List<Contact>) {
+  fun moveTo(fragment: Fragment) {
     supportFragmentManager.beginTransaction()
-        .replace(android.R.id.content, AmountFragment.create(contacts))
+        .replace(android.R.id.content, fragment)
         .addToBackStack(null)
         .commit()
   }
