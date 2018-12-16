@@ -16,7 +16,7 @@ import android.view.ViewGroup
 import com.braisgabin.showmedamoney.R
 import com.braisgabin.showmedamoney.commons.extensions.allGoneExcept
 import com.braisgabin.showmedamoney.commons.extensions.exhaustive
-import com.braisgabin.showmedamoney.component
+import com.braisgabin.showmedamoney.di.DaggerActivity
 import kotterknife.bindView
 import kotterknife.bindViews
 import javax.inject.Inject
@@ -35,7 +35,7 @@ class ContactsFragment : Fragment() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    activity!!.application.component
+    (activity as DaggerActivity).activityComponent
         .inject(this)
 
     LiveDataReactiveStreams.fromPublisher(presenter.states)

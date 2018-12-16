@@ -1,10 +1,10 @@
 package com.braisgabin.showmedamoney
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import com.braisgabin.showmedamoney.di.DaggerActivity
 import com.braisgabin.showmedamoney.presentation.contacts.ContactsFragment
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : DaggerActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
