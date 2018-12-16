@@ -3,6 +3,9 @@ package com.braisgabin.showmedamoney.presentation.contacts
 import android.Manifest
 import android.arch.lifecycle.LiveDataReactiveStreams
 import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModel
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
@@ -19,7 +22,6 @@ import com.braisgabin.showmedamoney.commons.extensions.exhaustive
 import com.braisgabin.showmedamoney.di.DaggerActivity
 import kotterknife.bindView
 import kotterknife.bindViews
-import javax.inject.Inject
 
 class ContactsFragment : Fragment() {
 
@@ -29,14 +31,17 @@ class ContactsFragment : Fragment() {
     }
   }
 
-  @Inject
-  internal lateinit var presenter: ContactsPresenter
+  private lateinit var presenter: ContactsPresenter
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    (activity as DaggerActivity).activityComponent
-        .inject(this)
+    presenter = ViewModelProviders.of(this, object : ViewModelProvider.Factory {
+
+      override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return (activity as DaggerActivity).activityComponent.contactsPresenter() as T
+      }
+    }).get(ContactsPresenter::class.java)
 
     LiveDataReactiveStreams.fromPublisher(presenter.states)
         .observe(this, Observer<ContactsState> { state -> render(state!!) })

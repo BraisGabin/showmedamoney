@@ -2,7 +2,8 @@ package com.braisgabin.showmedamoney.di
 
 import android.app.Activity
 import com.braisgabin.showmedamoney.presentation.amount.AmountFragment
-import com.braisgabin.showmedamoney.presentation.contacts.ContactsFragment
+import com.braisgabin.showmedamoney.presentation.amount.AmountPresenter
+import com.braisgabin.showmedamoney.presentation.contacts.ContactsPresenter
 import dagger.BindsInstance
 import dagger.Subcomponent
 
@@ -17,6 +18,8 @@ interface ActivityComponent {
     fun build(): ActivityComponent
   }
 
-  fun inject(fragment: ContactsFragment)
   fun inject(fragment: AmountFragment)
+
+  fun contactsPresenter(): ContactsPresenter
+  fun amountPresenter(): AmountPresenter
 }

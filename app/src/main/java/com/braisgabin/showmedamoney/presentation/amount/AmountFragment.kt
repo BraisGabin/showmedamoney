@@ -1,5 +1,8 @@
 package com.braisgabin.showmedamoney.presentation.amount
 
+import android.arch.lifecycle.ViewModel
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -19,8 +22,7 @@ class AmountFragment : Fragment() {
   private val amountEditText: EditText by bindView(R.id.editText)
   private val fab: View by bindView(R.id.fab)
 
-  @Inject
-  internal lateinit var presenter: AmountPresenter
+  private lateinit var presenter: AmountPresenter
 
   @Inject
   @field:Named("decimalSeparator")
@@ -29,7 +31,17 @@ class AmountFragment : Fragment() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    (activity as DaggerActivity).activityComponent
+    val component = (activity as DaggerActivity).activityComponent
+
+
+    presenter = ViewModelProviders.of(this, object : ViewModelProvider.Factory {
+
+      override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return (activity as DaggerActivity).activityComponent.amountPresenter() as T
+      }
+    }).get(AmountPresenter::class.java)
+
+    component
         .inject(this)
   }
 
