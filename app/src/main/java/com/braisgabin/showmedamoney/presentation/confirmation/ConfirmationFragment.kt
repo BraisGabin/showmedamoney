@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.braisgabin.showmedamoney.R
 import com.braisgabin.showmedamoney.commons.extensions.toArrayList
 import com.braisgabin.showmedamoney.di.DaggerActivity
@@ -20,12 +21,14 @@ import com.braisgabin.showmedamoney.presentation.ContactDTO
 import kotterknife.KotterKnife
 import kotterknife.bindView
 import java.math.BigDecimal
+import java.text.NumberFormat
 
 class ConfirmationFragment : Fragment() {
 
   private lateinit var presenter: ConfirmationPresenter
 
   private val recyclerView: RecyclerView by bindView(R.id.recyclerView)
+  private val textView: TextView by bindView(R.id.textView)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -70,6 +73,7 @@ class ConfirmationFragment : Fragment() {
     if (recyclerView.adapter == null) {
       recyclerView.adapter = adapter
     }
+    textView.text = NumberFormat.getCurrencyInstance().format(state.amount)
   }
 
   companion object {

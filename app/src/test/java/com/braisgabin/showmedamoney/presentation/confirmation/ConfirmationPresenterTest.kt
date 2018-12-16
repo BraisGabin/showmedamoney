@@ -11,9 +11,11 @@ class ConfirmationPresenterTest {
         ConfirmationPresenter(BigDecimal("1"), listOf(contact("1")))
             .states
             .test()
-            .assertValue(ConfirmationState(listOf(
-                Split(BigDecimal("1.00"), contact("1"))
-            )))
+            .assertValue(ConfirmationState(
+                BigDecimal("1"),
+                listOf(
+                    Split(BigDecimal("1.00"), contact("1"))
+                )))
     }
 
     @Test
@@ -21,10 +23,12 @@ class ConfirmationPresenterTest {
         ConfirmationPresenter(BigDecimal("1"), listOf(contact("1"), contact("2")))
             .states
             .test()
-            .assertValue(ConfirmationState(listOf(
-                Split(BigDecimal("0.50"), contact("1")),
-                Split(BigDecimal("0.50"), contact("2"))
-            )))
+            .assertValue(ConfirmationState(
+                BigDecimal("1"),
+                listOf(
+                    Split(BigDecimal("0.50"), contact("1")),
+                    Split(BigDecimal("0.50"), contact("2"))
+                )))
     }
 
     @Test
@@ -32,10 +36,12 @@ class ConfirmationPresenterTest {
         ConfirmationPresenter(BigDecimal("1"), listOf(contact("1"), contact("2"), contact("3")))
             .states
             .test()
-            .assertValue(ConfirmationState(listOf(
-                Split(BigDecimal("0.33"), contact("1")),
-                Split(BigDecimal("0.33"), contact("2")),
-                Split(BigDecimal("0.34"), contact("3"))
-            )))
+            .assertValue(ConfirmationState(
+                BigDecimal("1"),
+                listOf(
+                    Split(BigDecimal("0.33"), contact("1")),
+                    Split(BigDecimal("0.33"), contact("2")),
+                    Split(BigDecimal("0.34"), contact("3"))
+                )))
     }
 }

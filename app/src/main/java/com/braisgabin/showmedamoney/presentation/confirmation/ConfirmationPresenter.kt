@@ -25,6 +25,6 @@ class ConfirmationPresenter @Inject constructor(
       }
     }
 
-    Flowable.just(ConfirmationState(splits))
+    Flowable.just(ConfirmationState(amount, splits))
   }
 }
