@@ -1,10 +1,14 @@
 package com.braisgabin.showmedamoney.presentation.amount
 
+import android.arch.lifecycle.LiveDataReactiveStreams
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +19,7 @@ import com.braisgabin.showmedamoney.entities.Contact
 import com.braisgabin.showmedamoney.presentation.ContactDTO
 import kotterknife.KotterKnife
 import kotterknife.bindView
+import java.util.ArrayList
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -34,7 +39,6 @@ class AmountFragment : Fragment() {
 
     val component = (activity as DaggerActivity).activityComponent
 
-
     presenter = ViewModelProviders.of(this, object : ViewModelProvider.Factory {
 
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -44,6 +48,10 @@ class AmountFragment : Fragment() {
 
     component
         .inject(this)
+
+
+    LiveDataReactiveStreams.fromPublisher(presenter.states)
+        .observe(this, Observer<AmountState> { state -> render(state!!) })
   }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -52,6 +60,23 @@ class AmountFragment : Fragment() {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     amountEditText.filters = arrayOf(AmountFilter(1_000L, decimalSeparator))
+    presenter.events.accept(AmountEvent.WriteAmount(amountEditText.text.toString()))
+    amountEditText.addTextChangedListener(object : TextWatcher {
+      override fun afterTextChanged(s: Editable) {
+        presenter.events.accept(AmountEvent.WriteAmount(s.toString()))
+      }
+
+      override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+      }
+
+      override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+      }
+    })
+
+    fab.setOnClickListener { _ ->
+      val contacts = arguments!!.getParcelableArrayList<ContactDTO>(CONTACTS)!!.map { it.toDomain() }
+      presenter.events.accept(AmountEvent.ClickNextStep(amountEditText.text.toString(), contacts))
+    }
   }
 
   override fun onDestroyView() {
@@ -59,15 +84,23 @@ class AmountFragment : Fragment() {
     KotterKnife.reset(this)
   }
 
+  private fun render(state: AmountState) {
+    fab.visibility = if (state.allowNextStep) View.VISIBLE else View.GONE
+  }
+
   companion object {
     fun create(contacts: List<Contact>): AmountFragment {
       return AmountFragment().apply {
         arguments = Bundle().apply {
-          putParcelableArray(CONTACTS, contacts.map { ContactDTO(it) }.toTypedArray())
+          putParcelableArrayList(CONTACTS, contacts.map { ContactDTO(it) }.toArrayList())
         }
       }
     }
   }
+}
+
+private fun <E> Collection<E>.toArrayList(): ArrayList<E> {
+  return ArrayList(this)
 }
 
 private const val CONTACTS = "contacts"
