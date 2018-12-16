@@ -4,6 +4,7 @@ import android.app.Activity
 import com.braisgabin.showmedamoney.MainActivity
 import com.braisgabin.showmedamoney.entities.Contact
 import com.braisgabin.showmedamoney.presentation.amount.AmountFragment
+import com.braisgabin.showmedamoney.presentation.confirmation.ConfirmationFragment
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -18,6 +19,6 @@ class NavigatorForMainActivity @Inject constructor(
   }
 
   override fun step3(amount: BigDecimal, contacts: List<Contact>) {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    activity.moveTo(ConfirmationFragment.create(amount, contacts))
   }
 }
