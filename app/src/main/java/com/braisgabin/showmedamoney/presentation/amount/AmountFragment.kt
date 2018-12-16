@@ -13,6 +13,7 @@ import com.braisgabin.showmedamoney.R
 import com.braisgabin.showmedamoney.di.DaggerActivity
 import com.braisgabin.showmedamoney.entities.Contact
 import com.braisgabin.showmedamoney.presentation.ContactDTO
+import kotterknife.KotterKnife
 import kotterknife.bindView
 import javax.inject.Inject
 import javax.inject.Named
@@ -51,6 +52,11 @@ class AmountFragment : Fragment() {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     amountEditText.filters = arrayOf(AmountFilter(1_000L, decimalSeparator))
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    KotterKnife.reset(this)
   }
 
   companion object {

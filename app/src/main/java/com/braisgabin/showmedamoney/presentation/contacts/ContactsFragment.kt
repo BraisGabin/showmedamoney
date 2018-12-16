@@ -20,6 +20,7 @@ import com.braisgabin.showmedamoney.R
 import com.braisgabin.showmedamoney.commons.extensions.allGoneExcept
 import com.braisgabin.showmedamoney.commons.extensions.exhaustive
 import com.braisgabin.showmedamoney.di.DaggerActivity
+import kotterknife.KotterKnife
 import kotterknife.bindView
 import kotterknife.bindViews
 
@@ -67,6 +68,11 @@ class ContactsFragment : Fragment() {
     fab.setOnClickListener {
       presenter.events.accept(ContactsEvent.NextStepClick)
     }
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    KotterKnife.reset(this)
   }
 
   override fun onResume() {
