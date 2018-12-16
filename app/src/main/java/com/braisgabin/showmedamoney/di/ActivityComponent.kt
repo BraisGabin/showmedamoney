@@ -3,6 +3,7 @@ package com.braisgabin.showmedamoney.di
 import android.app.Activity
 import com.braisgabin.showmedamoney.presentation.amount.AmountFragment
 import com.braisgabin.showmedamoney.presentation.amount.AmountPresenter
+import com.braisgabin.showmedamoney.presentation.confirmation.ConfirmationComponent
 import com.braisgabin.showmedamoney.presentation.contacts.ContactsPresenter
 import dagger.BindsInstance
 import dagger.Subcomponent
@@ -22,4 +23,6 @@ interface ActivityComponent {
 
   fun contactsPresenter(): ContactsPresenter
   fun amountPresenter(): AmountPresenter
+
+  fun confirmationBuilder(): ConfirmationComponent.Builder
 }
