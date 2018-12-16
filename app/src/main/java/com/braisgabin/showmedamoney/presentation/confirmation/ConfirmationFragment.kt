@@ -7,15 +7,25 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.braisgabin.showmedamoney.R
 import com.braisgabin.showmedamoney.commons.extensions.toArrayList
 import com.braisgabin.showmedamoney.di.DaggerActivity
 import com.braisgabin.showmedamoney.entities.Contact
 import com.braisgabin.showmedamoney.presentation.ContactDTO
+import kotterknife.KotterKnife
+import kotterknife.bindView
 import java.math.BigDecimal
 
 class ConfirmationFragment : Fragment() {
 
   private lateinit var presenter: ConfirmationPresenter
+
+  private val recyclerView: RecyclerView by bindView(R.id.recyclerView)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -41,8 +51,25 @@ class ConfirmationFragment : Fragment() {
         .observe(this, Observer<ConfirmationState> { state -> render(state!!) })
   }
 
-  private fun render(state: ConfirmationState) {
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    return inflater.inflate(R.layout.fragment_confirmation, container, false)
+  }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    recyclerView.layoutManager = LinearLayoutManager(context)
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    KotterKnife.reset(this)
+  }
+
+  private fun render(state: ConfirmationState) {
+    val adapter = recyclerView.adapter as ConfirmationAdapter? ?: ConfirmationAdapter()
+    adapter.submitList(state.contacts)
+    if (recyclerView.adapter == null) {
+      recyclerView.adapter = adapter
+    }
   }
 
   companion object {
