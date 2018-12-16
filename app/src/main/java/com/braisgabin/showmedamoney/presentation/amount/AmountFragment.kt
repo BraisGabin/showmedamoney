@@ -14,12 +14,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import com.braisgabin.showmedamoney.R
+import com.braisgabin.showmedamoney.commons.extensions.toArrayList
 import com.braisgabin.showmedamoney.di.DaggerActivity
 import com.braisgabin.showmedamoney.entities.Contact
 import com.braisgabin.showmedamoney.presentation.ContactDTO
 import kotterknife.KotterKnife
 import kotterknife.bindView
-import java.util.ArrayList
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -97,10 +97,6 @@ class AmountFragment : Fragment() {
       }
     }
   }
-}
-
-private fun <E> Collection<E>.toArrayList(): ArrayList<E> {
-  return ArrayList(this)
 }
 
 private const val CONTACTS = "contacts"
