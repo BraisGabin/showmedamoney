@@ -10,7 +10,7 @@ class MarvelInterceptor @Inject constructor() : Interceptor {
   override fun intercept(chain: Interceptor.Chain): Response {
     val currentTime = System.currentTimeMillis()
 
-    val url = chain.request().url()
+    val url = chain.request().url
         .newBuilder()
         .addQueryParameter("ts", "$currentTime")
         .addQueryParameter("apikey", publicKey)

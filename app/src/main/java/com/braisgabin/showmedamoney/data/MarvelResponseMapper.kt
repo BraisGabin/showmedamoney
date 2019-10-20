@@ -1,14 +1,14 @@
 package com.braisgabin.showmedamoney.data
 
 import com.braisgabin.showmedamoney.entities.Contact
-import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
 class MarvelResponseMapper(
     val data: MarvelListMapper
 ) {
   fun toDomain(): List<Contact> {
     return data.results.map {
-      val thumbnail = HttpUrl.parse(it.thumbnail.path + "/standard_xlarge.jpg")!!
+      val thumbnail = (it.thumbnail.path + "/standard_xlarge.jpg").toHttpUrlOrNull()!!
           .newBuilder()
           .scheme("https")
           .build()

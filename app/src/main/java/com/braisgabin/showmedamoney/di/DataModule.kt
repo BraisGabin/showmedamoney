@@ -10,7 +10,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.Reusable
 import io.reactivex.schedulers.Schedulers
+import okhttp3.Call
 import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -66,7 +68,9 @@ abstract class DataModule {
           .baseUrl("https://gateway.marvel.com/")
           .addConverterFactory(GsonConverterFactory.create(gson))
           .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
-          .callFactory { okHttpClient.newCall(it) }
+          .callFactory(object : Call.Factory {
+            override fun newCall(request: Request): Call = okHttpClient.newCall(request)
+          })
           .build()
     }
 
