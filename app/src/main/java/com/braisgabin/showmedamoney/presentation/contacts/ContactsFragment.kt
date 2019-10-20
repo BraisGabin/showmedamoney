@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveDataReactiveStreams
@@ -79,8 +78,12 @@ class ContactsFragment : Fragment() {
   override fun onResume() {
     super.onResume()
     if (ContextCompat.checkSelfPermission(context!!, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-      ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.READ_CONTACTS), 0)
+      requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS), 0)
     }
+  }
+
+  override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    presenter.events.accept(ContactsEvent.Retry)
   }
 
   private fun render(state: ContactsState) {
