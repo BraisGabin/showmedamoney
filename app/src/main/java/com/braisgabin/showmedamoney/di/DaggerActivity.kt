@@ -1,6 +1,6 @@
 package com.braisgabin.showmedamoney.di
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.braisgabin.showmedamoney.App
 
 open class DaggerActivity : AppCompatActivity() {

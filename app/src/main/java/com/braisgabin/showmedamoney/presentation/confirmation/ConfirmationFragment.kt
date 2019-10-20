@@ -1,18 +1,18 @@
 package com.braisgabin.showmedamoney.presentation.confirmation
 
-import android.arch.lifecycle.LiveDataReactiveStreams
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveDataReactiveStreams
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.braisgabin.showmedamoney.R
 import com.braisgabin.showmedamoney.commons.extensions.toArrayList
 import com.braisgabin.showmedamoney.di.DaggerActivity

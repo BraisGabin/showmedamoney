@@ -4,15 +4,14 @@ package kotterknife
 
 import android.app.Activity
 import android.app.Dialog
-import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.View
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import java.util.Collections
 import java.util.WeakHashMap
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.Fragment
-
 
 // Extracted from https://github.com/rubengees/kotterknife
 object KotterKnife {
@@ -98,7 +97,7 @@ private val Activity.viewFinder: Activity.(Int) -> View?
 private val Dialog.viewFinder: Dialog.(Int) -> View?
   get() = { findViewById(it) }
 private val DialogFragment.viewFinder: DialogFragment.(Int) -> View?
-  get() = { dialog.findViewById(it) ?: view?.findViewById(it) }
+  get() = { dialog?.findViewById(it) ?: view?.findViewById(it) }
 private val Fragment.viewFinder: Fragment.(Int) -> View?
   get() = { view?.findViewById(it) }
 private val ViewHolder.viewFinder: ViewHolder.(Int) -> View?

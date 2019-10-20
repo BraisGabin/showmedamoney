@@ -1,7 +1,6 @@
 package com.braisgabin.showmedamoney.presentation.contacts
 
 import com.braisgabin.showmedamoney.entities.Contact
-import io.reactivex.Observable
 
 sealed class ContactsState {
   object Progress : ContactsState()
