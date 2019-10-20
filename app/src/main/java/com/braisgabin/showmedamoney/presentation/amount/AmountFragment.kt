@@ -1,11 +1,13 @@
 package com.braisgabin.showmedamoney.presentation.amount
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveDataReactiveStreams
@@ -56,7 +58,7 @@ class AmountFragment : Fragment() {
   }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-    return inflater.inflate(R.layout.fragment_amount, container, false)
+    return inflater.inflate(com.braisgabin.showmedamoney.R.layout.fragment_amount, container, false)
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -78,6 +80,9 @@ class AmountFragment : Fragment() {
       val contacts = arguments!!.getParcelableArrayList<ContactDTO>(CONTACTS)!!.map { it.toDomain() }
       presenter.events.accept(AmountEvent.ClickNextStep(amountEditText.text.toString(), contacts))
     }
+
+    requireContext().openSoftKeyboard()
+    amountEditText.requestFocus()
   }
 
   override fun onDestroyView() {
@@ -101,3 +106,8 @@ class AmountFragment : Fragment() {
 }
 
 private const val CONTACTS = "contacts"
+
+private fun Context.openSoftKeyboard() {
+  val imm = androidx.core.content.ContextCompat.getSystemService(this, InputMethodManager::class.java)
+  imm?.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+}
