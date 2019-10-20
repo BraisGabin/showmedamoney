@@ -42,6 +42,7 @@ class AmountFragment : Fragment() {
     presenter = ViewModelProviders.of(this, object : ViewModelProvider.Factory {
 
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        @Suppress("UNCHECKED_CAST")
         return (activity as DaggerActivity).activityComponent.amountPresenter() as T
       }
     }).get(AmountPresenter::class.java)

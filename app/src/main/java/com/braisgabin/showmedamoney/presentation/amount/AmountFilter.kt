@@ -31,8 +31,8 @@ class AmountFilter(
         value < maxAmount -> null
         value > maxAmount -> dest.subSequence(dstart, dend)
         else -> {
-          val decimals = matcher.group(2).replace(decimalSeparator, "")
-          if (decimals.isEmpty() || decimals.toInt() == 0) {
+          val decimals = matcher.group(2)?.replace(decimalSeparator, "")
+          if (decimals.isNullOrEmpty() || decimals.toInt() == 0) {
             null
           } else {
             dest.subSequence(dstart, dend)

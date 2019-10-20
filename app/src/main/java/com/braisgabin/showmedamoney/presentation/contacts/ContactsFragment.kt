@@ -40,6 +40,7 @@ class ContactsFragment : Fragment() {
     presenter = ViewModelProviders.of(this, object : ViewModelProvider.Factory {
 
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        @Suppress("UNCHECKED_CAST")
         return (activity as DaggerActivity).activityComponent.contactsPresenter() as T
       }
     }).get(ContactsPresenter::class.java)
