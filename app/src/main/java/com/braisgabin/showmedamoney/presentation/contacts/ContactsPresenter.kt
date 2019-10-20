@@ -19,12 +19,13 @@ class ContactsPresenter @Inject constructor(
 ) : RxViewModel() {
   val events: Relay<ContactsEvent> = PublishRelay.create()
   val states: Flowable<ContactsState> by lazy {
-    reducerFactory.create(
-        ContactsState.Progress,
-        Flowable.merge(partialStates()))
+    reducerFactory
+        .create(
+            ContactsState.Progress,
+            Flowable.merge(partialStates()))
         .doOnNext { lastState = it }
         .replay(1)
-        .autoConnect(0) { disposable.add(it) }
+        .autoConnect(1) { disposable.add(it) }
   }
 
   private var lastState: ContactsState? = null
